@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-
+                                //在Redis中键为Student::0 缓存了所以学生信息，Teacher::0缓存所以教师信息
 @Controller
 @RequestMapping("/Manager")
 public class ManagerController {
@@ -52,7 +52,7 @@ public class ManagerController {
         }
         String username=httpServletRequest.getParameter("username");
         String password=httpServletRequest.getParameter("password");
-        Manager manager=managerService.queryManagerByID(username);
+        Manager manager=managerService.queryManagerByID(username);              //登录认证
         if(manager!=null)
         {
             String ps=manager.getPassword();
@@ -73,7 +73,7 @@ public class ManagerController {
         {
             model.addAttribute("msg","请先登录");
             return "ManagerLogin";
-        }
+        }                                                                 //查看所以学生信息
         List<Student> students=managerService.queryStudentALL();
         model.addAttribute("students",students);
         return "ManagerMainStudent";
@@ -88,7 +88,7 @@ public class ManagerController {
             return "ManagerLogin";
         }
         managerService.deleteStudent(StudentID);
-        Boolean b=redisTemplate.hasKey("Student::0");
+        Boolean b=redisTemplate.hasKey("Student::0");               //同理该表某个学生时，包括所以学生信息的Student：：0的缓存，需要删除
         if(b!=null)
         {
             redisTemplate.delete("Student::0");
@@ -145,7 +145,7 @@ public class ManagerController {
         Boolean b=redisTemplate.hasKey("Student::0");
         if(b!=null)
         {
-            redisTemplate.delete("Student::0");
+            redisTemplate.delete("Student::0");         //同理，保证redis和mysql数据一致性
         }
         return "redirect:/Manager/Students";
     }
@@ -157,7 +157,7 @@ public class ManagerController {
             model.addAttribute("msg","请先登录");
             return "ManagerLogin";
         }
-        return "ManagerMainStudentAdd";
+        return "ManagerMainStudentAdd";               //增加学生的表单，填写后发送至"/Student/AddOver"
     }
 
 
@@ -180,7 +180,7 @@ public class ManagerController {
 
 
         if(StudentID.equals("")||Password.equals("")||Name.equals("")||Major.equals("")||College.equals("")||
-                Age.equals("")||Sex.equals(""))
+                Age.equals("")||Sex.equals(""))                           
         {
             model.addAttribute("msg","请输入完整信息");
             return "ManagerMainStudentAdd";
@@ -195,9 +195,9 @@ public class ManagerController {
         student.setSex(Sex);
         student.setSalt(Salt);
         managerService.addStudent(student);
-        Boolean b=redisTemplate.hasKey("Student::0");
+        Boolean b=redisTemplate.hasKey("Student::0");            //缓存的原因与上述相同
         if(b!=null)
-        {
+        {        
             redisTemplate.delete("Student::0");
         }
         return "redirect:/Manager/Students";
