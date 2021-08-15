@@ -22,7 +22,7 @@ public class RedisConfig {
 
 
     @SuppressWarnings("all")
-    @Bean(name="re")
+    @Bean(name="re")                               //自定义RedisTemplate的配置
     public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory Factory) throws UnknownHostException
     {
         //连接配置
