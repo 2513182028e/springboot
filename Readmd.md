@@ -82,7 +82,7 @@
          例如：Redis缓存中存储的键为ViewClass：：0的数据，其本质由MYSQL数据库中的Class表和class——teacher表依靠同一属性TeacherID连接而成，因此，在管理员对课程信息（Class）或者
          任教关系（Class——teacher）进行增删改完成之后，都需要将ViewClass：：0这个键主动删除，其他的缓存实现思路同理，具体可见代码（含注释）
      #最后
-       第一次写READMD.md，表述可能不太好，见谅
+       第一次写READMD.md，表述可能不太好，之前没有过前后端分离开发的经验，因此接口没有使用JSON接口，在thymeleaf模板中混合了JAVA代码，在开学之前预计能理解前后端分类的项目，
          
          
            
