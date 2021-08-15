@@ -138,7 +138,7 @@ public class StudentController {
             model.addAttribute("msg","请先登录");
             return "StudentLogin";
         }
-        RLock lock=redissonClient.getLock(TeacherID+ClassID);
+        RLock lock=redissonClient.getLock(TeacherID+ClassID);       //对于该这个课程加上锁，保证的数据一致性
         int numMax=classesService.queryByID(ClassID).getNumberMax();  //每个课程最大开班人数
         int num=classesService.countNumber(TeacherID,ClassID);           //以及参加某个课程的学生人数           //由于学生的选课波动过大，故这里不采用缓存
 
@@ -184,8 +184,8 @@ public class StudentController {
                         redisTemplate.opsForValue().set("ClassNumber::"+TeacherIDD+ClassIDD,numd);
                     }
                 }
-                model.addAttribute("ClassesList", viewClasses);
-                lock.unlock();
+                model.addAttribute("ClassesList", viewClasses); 
+                lock.unlock();         //时间有冲突下，解锁
                 return "StudentMainChoose";              
             }
         }
@@ -196,7 +196,7 @@ public class StudentController {
         }
        studentService.JoinClass(StudentID,ClassID,TeacherID);
         redisTemplate.opsForValue().increment("ClassNumber::"+TeacherID+ClassID);
-        lock.unlock();
+        lock.unlock();     //选课成功后解锁
        return  "redirect:/Student/Query";
     }
     @RequestMapping("/delete")
@@ -250,7 +250,7 @@ public class StudentController {
             model.addAttribute("msg","请先登录");                                //删除已经选择的课
             return "StudentLogin";
         }
-
+        
         String StudentID=(String) httpSession.getAttribute("username");
         String TeacherID=studentService.queryTeacherIDBye(StudentID,ClassID);
         studentService.deleteChosen(ClassID,StudentID);
