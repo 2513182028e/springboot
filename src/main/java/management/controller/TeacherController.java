@@ -82,7 +82,7 @@ public class TeacherController {
 
             if(pass.equals(result))
             {
-                httpSession.setAttribute("TeacherID",username);
+                httpSession.setAttribute("TeacherID",username);                        //MD5加密时，登录验证
                 return "TeacherMain";
             }
         }
@@ -94,7 +94,7 @@ public class TeacherController {
     {
         String ID=(String) httpSession.getAttribute("TeacherID");
         //System.out.println("进入了查询功能");
-        List<ViewClass> emps=teacherService.queryTeachByID(ID);
+        List<ViewClass> emps=teacherService.queryTeachByID(ID);   //查询增加所教的课
         if(emps!=null)
         {
             for (ViewClass viewClass : emps) {
@@ -104,7 +104,7 @@ public class TeacherController {
                 if(k!=null)
                 {
                     int num=Integer.parseInt(k.toString());
-                    viewClass.setClassNumber(num);
+                    viewClass.setClassNumber(num);                     //已经参加的课的人数进行设计
                 }
                 else
                 {
@@ -132,7 +132,7 @@ public class TeacherController {
           String json="此课程号不存在";
           if(classes!=null)
           {
-              ObjectMapper om=new ObjectMapper();
+              ObjectMapper om=new ObjectMapper();                           //Ajax，异步刷新来检查课程编号是否正确
                json="此课程号输入正确";
           }
         httpServletResponse.setContentType("application/json;charset=utf-8");
@@ -146,19 +146,19 @@ public class TeacherController {
     public String ExamPoints(HttpSession httpSession,Model model)
     {
         List<class_student> class_students= new ArrayList<>();
-        String TeacherID=(String) httpSession.getAttribute("TeacherID");
+        String TeacherID=(String) httpSession.getAttribute("TeacherID");                           //获取这个老师所教课程的学生选课情况，
         List<class_student> classStudents=teacherService.QueryStu_classByTeacherID(TeacherID);
         model.addAttribute("setClassesPoints",classStudents);
-        return "TeacherMainScores";
+        return "TeacherMainScores";                                              
     }
     @RequestMapping("/StartSetPoints")
     public String  StartSetPoints(@RequestParam("StudentID") String StudentID,
                                   @RequestParam("ClassID") String ClassID,HttpSession httpSession,Model model)
     {
         String TeacherID=(String)httpSession.getAttribute("TeacherID");
-        class_student q=studentService.selectClass_stu(StudentID,ClassID,TeacherID);
-        model.addAttribute("Class_Stu",q);
-       return "TeacherMainSetPoints";
+        class_student q=studentService.selectClass_stu(StudentID,ClassID,TeacherID);      
+        model.addAttribute("Class_Stu",q);                                       //获取要打分的具体学生的选课情况
+       return "TeacherMainSetPoints";                                           //跳转至相关表单
     }
 
     @RequestMapping("/SetPointsOver")
@@ -171,12 +171,12 @@ public class TeacherController {
         class_student q=studentService.selectClass_stu(StudentID,ClassID,TeacherID);
         class_student c=new class_student();
         c.setClassID(ClassID);
-        c.setStudentID(StudentID);
+        c.setStudentID(StudentID); 
         c.setTeacherIDD(TeacherID);
-        int F=Integer.parseInt(ClassDurationPoints);
-        int D=Integer.parseInt(ClassFinalPoints);
+        int F=Integer.parseInt(ClassDurationPoints);  //课程平时成绩分
+        int D=Integer.parseInt(ClassFinalPoints);       //课程期末成绩分
         if(F<0 || F>30)
-        {
+        {                                                    //对于表单输入的分数进行检查，判断其合理性
 
             model.addAttribute("Class_Stu",q);
             model.addAttribute("msg","学生学号为:"+StudentID+"课程号为:"+ClassID+"的平时分错误"+"平时分应该在0-30之间");
@@ -192,8 +192,8 @@ public class TeacherController {
         c.setClassFinalPoints(Integer.parseInt(ClassFinalPoints));
         c.setClassPoints(D+F);
         teacherService.updateClass_stu(c);
-        Boolean d=redisTemplate.hasKey("class_student::"+TeacherID);
-        if(d!=null)
+        Boolean d=redisTemplate.hasKey("class_student::"+TeacherID);         //删除缓存，保证数据一致性
+        if(d!=null)     
         {
             redisTemplate.delete("class_student::"+TeacherID);
         }
@@ -209,7 +209,7 @@ public class TeacherController {
         int d=Integer.parseInt(ClassDurationPoints);
         int f=Integer.parseInt(ClassFinalPoints);
         String json="此分数在合理区间";
-        if(d>=0&&d<=30&&f>=0&&f<=70)
+        if(d>=0&&d<=30&&f>=0&&f<=70)                          //Ajax，在填写表单期间检查分数的合理性
         {
             ObjectMapper om=new ObjectMapper();
             json="分数在合理区间";
@@ -230,7 +230,7 @@ public class TeacherController {
              class_student d=studentService.selectClass_stu(StudentID,ClassID,TeacherID);
              d.setClassDurationPoints(0);
              d.setClassFinalPoints(0);
-             d.setClassPoints(0);
+             d.setClassPoints(0);                          //对于已经打的分，清空归零
              teacherService.updateClass_stu(d);
         Boolean g=redisTemplate.hasKey("class_student::"+TeacherID);
         if(g!=null)
