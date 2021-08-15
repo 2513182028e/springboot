@@ -50,11 +50,11 @@ public class StudentController {
 
     @Autowired
     @Qualifier("ra")
-    private RedissonClient redissonClient;
+    private RedissonClient redissonClient;          //引入Redisson分布式锁
 
     @Autowired
     @Qualifier("re")
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String,Object> redisTemplate;    //redisTemplate为自定义，可在实体类（Entity）中查看RedisConfig类
 
     @RequestMapping("/login")
     public String login() {
@@ -79,7 +79,7 @@ public class StudentController {
         Student student=studentService.queryByName(username);
         if(student!=null)
         {
-            String pas=student.getPassword();
+            String pas=student.getPassword();                                               //简单的MD5认证，    MD5（MD5（密码明文）+盐值）==数据库中的密码？
             String salt=student.getSalt();
             String re= DigestUtils.md5DigestAsHex(password.getBytes());
             String result=DigestUtils.md5DigestAsHex((re+salt).getBytes());
@@ -100,14 +100,14 @@ public class StudentController {
             model.addAttribute("msg","请先登录");
             return "StudentLogin";
         }
-          List<ViewClass> listed=classesService.QueryViewClassAll();
+          List<ViewClass> listed=classesService.QueryViewClassAll();         //获取所有课程信息
           httpSession.setAttribute("ChoosingClasses",listed);
         if(listed!=null) {
             for (ViewClass viewClass : listed) {
                 String TeacherID = viewClass.getTeacherID();
                 String ClassID = viewClass.getClassID();
 
-                Object k=redisTemplate.opsForValue().get("ClassNumber::"+TeacherID+ClassID);
+                Object k=redisTemplate.opsForValue().get("ClassNumber::"+TeacherID+ClassID);    //从缓存中查询该可的已参加人数
                 if(k!=null)
                 {
                     int num=Integer.parseInt(k.toString());
@@ -115,8 +115,8 @@ public class StudentController {
                 }
                 else
                 {
-                    int num = classesService.countNumber(TeacherID, ClassID);
-                    viewClass.setClassNumber(num);
+                    int num = classesService.countNumber(TeacherID, ClassID);              //缓存中没有，去数据库中查
+                    viewClass.setClassNumber(num);                                     
                     redisTemplate.opsForValue().set("ClassNumber::"+TeacherID+ClassID,num);
                 }
             }
@@ -129,7 +129,7 @@ public class StudentController {
             return "StudentMain";
         }
     }
-    @RequestMapping("/join")
+    @RequestMapping("/join")                                         //参加每个课
     public String join(@RequestParam("TeacherID") String TeacherID, @RequestParam("ClassID")
             String ClassID, @RequestParam("Time") String time, HttpSession httpSession,Model model,
                        HttpServletResponse httpServletResponse) throws IOException {
@@ -139,27 +139,27 @@ public class StudentController {
             return "StudentLogin";
         }
         RLock lock=redissonClient.getLock(TeacherID+ClassID);
-        int numMax=classesService.queryByID(ClassID).getNumberMax();
-        int num=classesService.countNumber(TeacherID,ClassID);
+        int numMax=classesService.queryByID(ClassID).getNumberMax();  //每个课程最大开班人数
+        int num=classesService.countNumber(TeacherID,ClassID);           //以及参加某个课程的学生人数           //由于学生的选课波动过大，故这里不采用缓存
 
         if(num>=numMax)
         {
             List<ViewClass> viewClasses=classesService.QueryViewClassAll();
             model.addAttribute("msg","该课程人数已经满");
-            model.addAttribute("ClassesList", viewClasses);
+            model.addAttribute("ClassesList", viewClasses);                       
             lock.unlock();
             return "StudentMainChoose";
         }
         String StudentID=(String) httpSession.getAttribute("username");
         List<class_student> class_students=classesService.QueryClassesByID(StudentID);
-        for (management.entity.class_student class_student : class_students)
+        for (management.entity.class_student class_student : class_students)                     //该学生已经选择的课中查询有没有与该课程存在时间冲突的课程
         {
             Classes classes = classesService.queryByID(class_student.getClassID());
             if(classes==null)
             {
                 continue;
             }
-            if (ClassesTime.Com(classes.getTime(), time))
+            if (ClassesTime.Com(classes.getTime(), time))            //存在某个课程与要选的课时间冲突
             {
 
                 List<ViewClass> viewClasses = classesService.QueryViewClassAll();
@@ -169,11 +169,11 @@ public class StudentController {
                     String TeacherIDD = viewClass.getTeacherID();
                     String ClassIDD = viewClass.getClassID();
                     System.out.println(TeacherIDD+" "+ClassIDD);
-                    Object k=redisTemplate.opsForValue().get("ClassNumber::"+TeacherID+ClassIDD);
+                    Object k=redisTemplate.opsForValue().get("ClassNumber::"+TeacherID+ClassIDD);        
                     if(k!=null)
                     {
                         int numd=Integer.parseInt(k.toString());
-                        viewClass.setClassNumber(numd);
+                        viewClass.setClassNumber(numd);                                  //对ViewClass课程中的已参加人数设置
 
                     }
                     else
@@ -186,10 +186,10 @@ public class StudentController {
                 }
                 model.addAttribute("ClassesList", viewClasses);
                 lock.unlock();
-                return "StudentMainChoose";
+                return "StudentMainChoose";              
             }
         }
-        Boolean f=redisTemplate.hasKey("ViewClass::0");
+        Boolean f=redisTemplate.hasKey("ViewClass::0");       //学生选课删缓存
         if(f!=null)
         {
             redisTemplate.delete("ViewClass::0");
@@ -210,7 +210,7 @@ public class StudentController {
         }
         RLock lock = redissonClient.getLock(TeacherID + ClassID);
 
-            String StudentID = (String) httpSession.getAttribute("username");
+            String StudentID = (String) httpSession.getAttribute("username");                     //这个没有使用
             List<class_student> class_students = classesService.QueryClassesByID(StudentID);
             List<Classes> list = CastList.castList(httpSession.getAttribute("list"), Classes.class);
             studentService.deleteClass(StudentID, ClassID, TeacherID);
@@ -224,7 +224,7 @@ public class StudentController {
         if(httpSession.getAttribute("username")==null)
         {
             model.addAttribute("msg","请先登录");
-            return "StudentLogin";
+            return "StudentLogin";                                        //查询已经选择的课程
         }
         String StudentID=(String) httpSession.getAttribute("username");
         List<Classes> listed=new ArrayList<>();
@@ -247,7 +247,7 @@ public class StudentController {
     {
         if(httpSession.getAttribute("username")==null)
         {
-            model.addAttribute("msg","请先登录");
+            model.addAttribute("msg","请先登录");                                //删除已经选择的课
             return "StudentLogin";
         }
 
@@ -262,7 +262,7 @@ public class StudentController {
     {
         if(httpSession.getAttribute("username")==null)
         {
-            model.addAttribute("msg","请先登录");
+            model.addAttribute("msg","请先登录");                           //查看考试成绩
             return "StudentLogin";
         }
         String StudentID=(String) httpSession.getAttribute("username");
