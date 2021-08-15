@@ -16,7 +16,7 @@ public class RedissonConfig {
     @Bean("ra")
    public RedissonClient redissonClient()
    {
-       Config config=new Config();
+       Config config=new Config();                                                        //Redisosn锁的基本配置
        SingleServerConfig singleServerConfig=config.useSingleServer();
        singleServerConfig.setAddress("redis://192.168.180.139:6379");
        singleServerConfig.setDatabase(0);
