@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <tr align="center">
+        <td >学生学号</td>&nbsp;
+        <td>课程编号</td>&nbsp;
+        <td>教师编号</td>&nbsp;
+        <td>课程平时分</td>
+        <td>课程期末分</td>
+        <td>课程总成绩</td>
+    </tr>
+    <tr th:each="emp :${ChosenClasses}"  class="row">
+        <td>
+            <span th:text="${emp.getStudentID()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassID()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getTeacherIDD()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassDurationPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassFinalPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassPoints()}"></span>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr align="center">
+        <td>课程编号</td>&nbsp;
+        <td>课程名称</td>&nbsp;
+        <td>课程内容</td>
+        <td>课程平时分占比</td>
+        <td>课程期末分占比</td>
+        <td>课程总成绩</td>
+        <td>课程最大人数</td>
+        <td>上课地点</td>
+        <td>上课时间</td>
+    </tr>
+    <tr th:each="emp  :${ConcreteClasses}"  class="row">
+        <td>
+            <span th:text="${emp.getClassID()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassName()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getContext()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassDurationPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassFinalPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getNumberMax()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getPlace()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getTime()}"></span>
+        </td>
+</table>
+<br>
+<a href="/Student/login/Authentication">返回首页</a>
+</body>
+</html>

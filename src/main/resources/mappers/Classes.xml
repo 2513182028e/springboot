@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="management.dao.ClassesDao">
+
+
+    <select id="queryByID" resultType="management.entity.Classes" useCache="true" flushCache="true">
+        select* from class where ClassID=#{ClassID}
+    </select>
+    <select id="QueryClassesAll" resultType="management.entity.class_teacher" useCache="true" flushCache="true">
+        select* from class_teacher
+    </select>
+
+    <select id="QueryClassesByID" resultType="management.entity.class_student" useCache="true" flushCache="true">
+        select * from stu_class where StudentID=#{StudentID}
+    </select>
+    <select id="QueryViewClassAll" resultType="management.entity.ViewClass">
+        select distinct* from class_teacher t1,class t2 where t1.ClassID=t2.ClassID
+    </select>
+    <select id="countNumber" resultType="java.lang.Integer">
+        select count(*)  from stu_class where ClassID=#{ClassID} and TeacherIDD=#{TeacherID}
+    </select>
+
+</mapper>

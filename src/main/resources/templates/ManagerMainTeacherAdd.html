@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="${msg}" th:if="${ not #strings.isEmpty(msg)}"></h1>
+<form action="/Manager/Teachers/AddOver">
+    <tr>
+        <td valign="middle" align="right">
+            教师编号
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" name="TeacherID" >
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            教师姓名
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text"  name="TeacherName" >
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            教师密码
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text"  name="Password" >
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            教师专业
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text"  name="Major">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            教师所在学院
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text"  name="College">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            加密值
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text"  name="Salt">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="left">
+            <input type="submit" value="提交">
+        </td>
+    </tr><br>
+</form>
+
+
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="management.dao.TeacherDao">
+    <select id="Class_teacher_information" resultType="management.entity.class_teacher" useCache="true" flushCache="true">
+        select* from class_teacher where ClassID=#{ClassID}
+    </select>
+    <select id="queryTeachByID" resultType="management.entity.ViewClass" >
+        select distinct* from class_teacher t1,class t2 where t1.ClassID=t2.ClassID and  TeacherID=#{TeacherID}
+    </select>
+    <select id="ClassInformationByID" resultType="management.entity.Classes" useCache="true" flushCache="true">
+        select* from class where ClassID=#{ClassID}
+    </select>
+    <select id="queryTeacherByID" resultType="management.entity.Teacher" useCache="true" flushCache="true">
+        select* from teacher where TeacherID=#{ID}
+    </select>
+    <delete id="deleteTeachByID" flushCache="true">
+      delete from class_teacher where TeacherID=#{ID} and ClassID=#{ClassID}
+    </delete>
+
+
+    <delete id="deleteClass_TeacherByID" flushCache="true">
+        delete from class_teacher where ClassID=#{ID}
+    </delete>
+
+    <update id="updateClass_stu" parameterType="management.entity.class_student" flushCache="true">
+        update stu_class set ClassDurationPoints=#{ClassDurationPoints} ,ClassFinalPoints=#{ClassFinalPoints},
+        ClassPoints=#{ClassPoints} where StudentID=#{StudentID} and ClassID=#{ClassID} and TeacherIDD=#{TeacherIDD}
+    </update>
+
+    <select id="queryOneTeachById" resultType="management.entity.class_teacher">
+        select* from  class_teacher where TeacherID=#{TeacherID} and ClassID=#{ClassID}
+    </select>
+
+
+    <select id="QueryStu_classByTeacherID" resultType="management.entity.class_student">
+        select * from stu_class where TeacherIDD=#{TeacherID}
+    </select>
+</mapper>

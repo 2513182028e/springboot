@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta name="content-type" content="text/html; charset=UTF-8">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <tr align="center">
+        <td >教师编号</td>&nbsp;
+        <td>课程编号</td>&nbsp;
+        <td>课程名称</td>&nbsp;
+        <td>课程内容</td>
+        <td>课程平时分占比</td>
+        <td>课程期末分占比</td>
+        <td>课程总成绩</td>
+        <td>课程已参加人数</td>
+        <td>课程最大人数</td>
+        <td>上课地点</td>
+        <td>上课时间</td>
+        <td>操作1</td>
+        <td>操作2</td>
+        <td>状态</td>
+    </tr>
+    <tr th:each="emp :${ManagerClasses}"  class="row">
+        <td>
+            <span th:text="${emp.getTeacherID()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassID()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassName()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getContext()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassDurationPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassFinalPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassNumber()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getNumberMax()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getPlace()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getTime()}"></span>
+        </td>
+        <td>
+            <span>
+                <a th:href="@{/Manager/Classes/updateRelation(TeacherID=${emp.getTeacherID()},ClassID=${emp.getClassID()})}">修改教课关系</a>
+            </span>
+        </td>
+        <td>
+            <span>
+                <a th:href="@{/Manager/Classes/deleteRelation(TeacherID=${emp.getTeacherID()},ClassID=${emp.getClassID()})}">删除教课关系</a>
+            </span>
+        </td>
+    </tr>
+</table>
+<tr>
+        <span th:align="center">
+            <a th:href="@{/Manager/Classes/addRelation}" style="color: #ff0000" th:align="center">新增任教关系</a>
+        </span>
+</tr>
+<br>
+<br>
+<br>
+<a href="/Manager/login/Authentication">返回主页面</a>
+</form>
+</body>
+</html>

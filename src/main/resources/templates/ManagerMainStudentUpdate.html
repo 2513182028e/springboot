@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta name="content-type" content="text/html; charset=UTF-8">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="${msg}" th:if="${ not #strings.isEmpty(msg)}"></h1>
+<form action="/Manager/Students/UpdateOver">
+    <tr>
+        <td valign="middle" align="right">
+            学生编号
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${student.getStudentID()}" name="StudentID" readonly="readonly">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            学生密码
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${student.getPassword()}" name="Password" >
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            学生姓名
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${student.getName()}" name="Name" >
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            专业
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${student.getMajor()}" name="Major">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            学院
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${student.getCollege()}" name="College">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            年龄
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${student.getAge()}" name="Age">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            性别
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${student.getSex()}" name="Sex">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            加密值
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${student.getSalt()}" name="Salt">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="left">
+            <input type="submit" value="提交">
+        </td>
+    </tr><br>
+</form>
+
+
+
+</body>
+</html>

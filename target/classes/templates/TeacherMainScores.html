@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <tr align="center">
+        <td >学生编号</td>&nbsp;
+        <td>课程编号</td>&nbsp;
+        <td>教师编号</td>&nbsp;
+        <td>学生平时分</td>
+        <td>课程期末卷面分</td>
+        <td>课程最终分数</td>
+        <td>操作1</td>
+        <td>操作2</td>
+    </tr>
+    <tr th:each="emp:${setClassesPoints}" class="row" th:align="center">
+        <td>
+            <span th:text="${emp.getStudentID()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassID()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getTeacherIDD()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassDurationPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassFinalPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassPoints()}"></span>
+        </td>
+          <td>
+              <span th:align="center">
+                  <a th:href="@{/Teacher/StartSetPoints(StudentID=${emp.getStudentID()},ClassID=${emp.getClassID()})}">评分</a>
+              </span>
+          </td>
+          <td>
+              <span th:align="center">
+                  <a th:href="@{/Teacher/revocationPoints(StudentID=${emp.getStudentID()},ClassID=${emp.getClassID()})}">撤销</a>
+              </span>
+          </td>
+    </tr>
+    </tr>
+</table>
+<a href="/Teacher/main"><h1>返回主界面</h1></a>
+</body>
+</html>

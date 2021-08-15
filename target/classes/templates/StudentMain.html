@@ -1,0 +1,17 @@
+<!DOCTYPE html  >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="${msgg}" th:if="${not #strings.isEmpty(msgg)}"></h1>
+<div>
+    <a href="/Student/Query" ><h1>选课服务</h1></a>
+    <a href="/Student/QueryChosen"><h1>已选课查询</h1></a>
+    <a href="/Student/QueryExamPoints"><h1>成绩查询</h1></a>
+    <a href="/Student/LoginOut">退出登录</a>
+</div>
+<h1></h1>
+</body>
+</html>

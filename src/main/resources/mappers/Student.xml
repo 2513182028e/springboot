@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="management.dao.StudentDao" >
+
+
+
+    <select id="queryByName" resultType="management.entity.Student" >
+        select* from student where StudentID=#{username}
+    </select>
+    <select id="ChooseClasses" resultType="management.entity.Classes" >
+        select* from class where TeacherID=#{TeacherID} and ClassID=#{ClassID}
+    </select>
+    <insert id="JoinClass" >
+        insert into stu_class(StudentID,ClassID,TeacherIDD,
+        ClassDurationPoints,ClassFinalPoints,ClassPoints) values
+        (#{StudentID},#{ClassID},#{TeacherID},null,null,null)
+    </insert>
+    <delete id="deleteChosen" >
+        delete from stu_class where StudentID=#{StudentID} and ClassID=#{ClassID}
+    </delete>
+    <select id="QueryChosenClasses" resultType="management.entity.class_student" >
+        select* from stu_class where ClassID=#{ClassID} and TeacherIDD=#{TeacherID}
+    </select>
+    <select id="selectClass_stu" resultType="management.entity.class_student" >
+        select* from stu_class where StudentID=#{StudentID} and ClassID=#{ClassID} and TeacherIDD=#{TeacherID}
+    </select>
+    <select id="queryTeacherIDBye" resultType="java.lang.String">
+        select TeacherIDD from stu_class where StudentID=#{StudentID} and ClassID=#{ClassID}
+    </select>
+
+
+</mapper>

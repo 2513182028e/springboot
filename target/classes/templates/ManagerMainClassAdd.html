@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta name="content-type" content="text/html; charset=UTF-8">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></h1>
+<form action="/Manager/Classes/AddUOver" method="post">
+
+    <tr>
+        <td valign="middle" align="right">
+            课程编号
+        </td>
+        <td valign="middle" align="left">
+            <input type="text"  name="ClassID">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            课程名称
+        </td>
+        <td valign="middle" align="left">
+            <input type="text"  name="ClassName" >
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            课程内容
+        </td>
+        <td valign="middle" align="left">
+            <input type="text" name="Context" >
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            课程平时分占比
+        </td>
+        <td valign="middle" align="left">
+            <input type="text" name="ClassDurationPoints">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            课程期末分占比
+        </td>
+        <td valign="middle" align="left">
+            <input type="text" name="ClassFinalPoints">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            课程总成绩
+        </td>
+        <td valign="middle" align="left">
+            <input type="text"  name="ClassPoints">
+        </td>
+    </tr><br>
+
+    <tr>
+        <td valign="middle" align="right">
+            课程最大人数
+        </td>
+        <td valign="middle" align="left">
+            <input type="text"  name="NumberMax">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            上课地点
+        </td>
+        <td valign="middle" align="left">
+            <input type="text" name="Place">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            上课时间
+        </td>
+        <td valign="middle" align="left">
+            <input type="text"  name="Time">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="left">
+            <input type="submit" value="提交">
+        </td>
+    </tr><br>
+</form>
+</body>
+</html>

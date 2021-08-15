@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="management.dao.ManagerDao">
+    <select id="queryManagerByID" resultType="management.entity.Manager">
+        select* from manager where ManagerID=#{ManagerID}
+    </select>
+
+    <!-- 学生的增删改查-->
+    <insert id="addStudent" parameterType="management.entity.Student">
+        insert into student(StudentID,password,name,major,age,sex,college,salt
+        ) values(#{StudentID},#{password},#{name},#{major},#{age},#{sex},#{college},#{salt})
+    </insert>
+    <delete id="deleteStudent" >
+        delete from student where StudentID=#{StudentID}
+    </delete>
+    <update id="updateStudent" parameterType="management.entity.Student">
+        update student set password=#{password},name=#{name},
+        major=#{major},age=#{age},sex=#{sex},college=#{college},salt=#{salt} where StudentID=#{StudentID}
+    </update>
+
+    <select id="queryStudent" resultType="management.entity.Student" >
+        select* from student where StudentID=#{StudentID}
+    </select>
+    <select id="queryStudentALL" resultType="management.entity.Student">
+        select* from student
+    </select>
+
+
+
+    <!-- 教师的增删改查 -->
+    <select id="queryTeacher" resultType="management.entity.Teacher">
+        select *from   teacher where TeacherID=#{TeacherID}
+    </select>
+    <select id="queryTeacherAll" resultType="management.entity.Teacher">
+        select* from teacher
+    </select>
+    <insert id="addTeacher" parameterType="management.entity.Teacher">
+        insert into teacher(TeacherID,TeacherName,Password,major,college,salt) values(
+        #{TeacherID},#{TeacherName},#{Password},#{major},#{college},#{salt}
+        )
+    </insert>
+
+    <delete id="deleteTeacher">
+        delete from teacher where TeacherID=#{TeacherID}
+    </delete>
+    <update id="updateTeacher" parameterType="management.entity.Teacher">
+        update teacher set TeacherName=#{TeacherName},Password=#{Password},major=#{major},
+        college=#{college},salt=#{salt} where TeacherID=#{TeacherID}
+    </update>
+</mapper>

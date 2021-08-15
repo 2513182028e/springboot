@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="management.dao.ManagerClassDao">
+
+    <select id="queryClassesAll" resultType="management.entity.Classes">
+        select* from class
+    </select>
+
+    <insert id="AddClasses" parameterType="management.entity.Classes">
+        insert into class(ClassID,ClassName,Context,ClassDurationPoints,ClassFinalPoints,ClassPoints,
+        ClassNumber,NumberMax,Place,Time) values(#{ClassID},#{ClassName},#{Context},#{ClassDurationPoints},
+        #{ClassFinalPoints},#{ClassPoints},0,#{NumberMax},#{Place},#{Time}
+      )
+    </insert>
+
+    <update id="updateClass" parameterType="management.entity.Classes">
+        update class set ClassName=#{ClassName},Context=#{Context},ClassDurationPoints=#{ClassDurationPoints},
+        ClassFinalPoints=#{ClassFinalPoints},ClassPoints=#{ClassPoints},ClassNumber=#{ClassNumber},NumberMax=#{NumberMax},
+        Place=#{Place},Time=#{Time} where ClassID=#{ClassID}
+    </update>
+    <delete id="deleteClasses">
+        delete from class where ClassID=#{ClassID}
+    </delete>
+    <delete id="deleteRelation">
+        delete from class_teacher where TeacherID=#{TeacherID} and ClassID=#{ClassID}
+    </delete>
+    <insert id="addRelation" parameterType="management.entity.class_teacher">
+        insert into class_teacher(TeacherID,ClassID) values(#{TeacherID},#{ClassID})
+    </insert>
+    <update id="updateRelation" parameterType="management.entity.class_teacher">
+        update class_teacher set ClassID=#{newClassID}  where TeacherID=#{TeacherID} and ClassID=#{ClassID}
+    </update>
+    <select id="queryViewClassAll" resultType="management.entity.ViewClass">
+        select distinct* from class t1 ,class_teacher t2 where t1.ClassID=t2.ClassID
+    </select>
+    <select id="queryClass_teacher" resultType="management.entity.class_teacher">
+        select * from class_teacher where TeacherID=#{TeacherID} and ClassID=#{ClassID}
+    </select>
+
+
+</mapper>

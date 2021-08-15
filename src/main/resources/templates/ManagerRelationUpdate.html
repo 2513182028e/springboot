@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></h1>
+<form action="/Manager/Classes/updateRelationOver" method="post">
+    <tr>
+        <td valign="middle" align="right">
+            教师编号
+        </td>
+        <td valign="middle" align="left">
+            <input type="text"  th:value="${Relation.getTeacherID()}" name="TeacherID" readonly="readonly" >
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            原课程编号
+        </td>
+        <td valign="middle" align="left">
+            <input type="text" th:value="${Relation.getClassID()}"  name="ClassID" readonly="readonly">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            新课程编号
+        </td>
+        <td valign="middle" align="left">
+            <input type="text" id="NEWClassID"  name="NEWClassID"  oninput="fd()">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            课程名称
+        </td>
+        <td valign="middle" align="left">
+            <input type="text" id="mg" readonly="readonly" >
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="left">
+            <input type="submit" value="提交">
+        </td>
+    </tr><br>
+</form>
+<script type="text/javascript">
+    function fd() {
+        const xhr = new XMLHttpRequest();
+        const d = document.getElementById("NEWClassID").value;
+        xhr.onreadystatechange=function () {
+            if(xhr.readyState===4 && xhr.status===200)
+            {
+                document.getElementById("mg").value=xhr.responseText
+            }
+        }
+        xhr.open("GET","/Manager/Classes/InferClasses?ClassID="+d,true)
+        xhr.send();
+    }
+
+</script>
+<a href="/Manager/Classes/query"><h1>取消修改</h1></a>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="${msgg}" th:if="${not #strings.isEmpty(msgg)}"></h1>
+<div>
+    <a href="/Teacher/query" ><h1>课程管理</h1></a>
+    <a href="/Teacher/setPoints"><h1>学生成绩考核登记</h1></a>
+    <a href="/Teacher/logout"><h1>退出登录</h1></a>
+</div>
+
+</body>
+</html>

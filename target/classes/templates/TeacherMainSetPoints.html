@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="${msg}" th:if="${ not #strings.isEmpty(msg)}"></h1>
+<form action="/Teacher/SetPointsOver">
+    <tr>
+        <td valign="middle" align="right">
+            学生编号
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${Class_Stu.getStudentID()}" name="StudentID" readonly="readonly">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            课程编号
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${Class_Stu.getClassID()}" name="ClassID" readonly="readonly">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            教师编号
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${Class_Stu.getTeacherIDD()}" name="TeacherID" readonly="readonly">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            课程平时分
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${Class_Stu.getClassDurationPoints()}" name="ClassDurationPoints" oninput="doAjax()">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            课表期末卷面分
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${Class_Stu.getClassFinalPoints()}" name="ClassFinalPoints" oninput="doAjax()">
+        </td>
+    </tr><br>
+    <p th:id="ids" th:value="待输入"></p>
+    <tr>
+        <td valign="middle" align="right">
+            课表最终成绩
+        </td>
+        <td valign="middle" align="left">
+            <input th:text="text" th:value="${Class_Stu.getClassPoints()}" name="ClassPoints" readonly="readonly">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="left">
+            <input type="submit" value="提交">
+        </td>
+    </tr><br>
+</form>
+<script>
+    function doAjax() {
+        const xhr = new XMLHttpRequest();
+        const ClassDurationPoints = document.getElementById("ClassDurationPoints").value;
+        const ClassFinalPoints = document.getElementById("ClassFinalPoints").value;
+        xhr.onreadystatechange=function () {
+            if(xhr.readyState===4&& xhr.status===200)
+            {
+                document.getElementById("ids").value=xhr.responseText
+            }
+        }
+        xhr.open("get","/Teacher/examinePoints?ClassDurationPoints="+ClassDurationPoints+"&ClassFinalPoints="+ClassFinalPoints,true);
+        xhr.send()
+    }
+</script>
+<a href="/Teacher/main"><h1>返回主界面</h1></a>
+</body>
+</html>

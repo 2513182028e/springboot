@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="${msg}" th:if="${ not #strings.isEmpty(msg)}"></h1>
+<table>
+    <tr align="center">
+        <td >教师编号</td>&nbsp;
+        <td>课程编号</td>&nbsp;
+        <td>课程名称</td>&nbsp;
+        <td>课程内容</td>
+        <td>课程平时分占比</td>
+        <td>课程期末分占比</td>
+        <td>课程总成绩</td>
+        <td>课程已参加人数</td>
+        <td>课程最大人数</td>
+        <td>上课地点</td>
+        <td>上课时间</td>
+        <td>操作1</td>
+        <td>操作2</td>
+        <td>状态</td>
+    </tr>
+    <tr th:each="emp  :${ClassesList}"  class="row">
+        <td>
+            <span th:text="${emp.getTeacherID()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassID()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassName()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getContext()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassDurationPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassFinalPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassPoints()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getClassNumber()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getNumberMax()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getPlace()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getTime()}"></span>
+        </td>
+        <td>
+            <span>
+                <a th:href="@{/Student/join(TeacherID=${emp.getTeacherID()},ClassID=${emp.getClassID()},
+                Time=${emp.getTime()})}">参加</a>
+            </span>
+        </td>
+    </tr>
+</table>
+<a href="/Student/login/Authentication">返回首页</a>
+</form>
+</body>
+</html>

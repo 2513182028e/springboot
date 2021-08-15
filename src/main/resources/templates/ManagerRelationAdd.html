@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="${msg}" th:if="${ not #strings.isEmpty(msg)}"></h1>
+<form action="/Manager/Classes/addRelationOver">
+    <tr>
+        <td valign="middle" align="right">
+            教师编号
+        </td>
+        <td valign="middle" align="left">
+            <input type="text"   name="TeacherID">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            课程编号
+        </td>
+        <td valign="middle" align="left">
+            <input type="text" id="ClassID" name="ClassID" oninput="f()">
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="right">
+            课程名称
+        </td>
+        <td valign="middle" align="left">
+            <input type="text" id="mg"  name="ClassName" readonly="readonly" >
+        </td>
+    </tr><br>
+    <tr>
+        <td valign="middle" align="left">
+            <input type="submit" value="提交">
+        </td>
+    </tr><br>
+
+</form>
+</body>
+<script type="text/javascript">
+    function f() {
+        const xhr = new XMLHttpRequest();
+        const d = document.getElementById("ClassID").value;
+        xhr.onreadystatechange=function () {
+           if(xhr.readyState===4 && xhr.status===200)
+           {
+               document.getElementById("mg").value=xhr.responseText
+           }
+         }
+         xhr.open("GET","/Manager/Classes/InferClasses?ClassID="+d,true)
+         xhr.send();
+    }
+
+</script>
+</html>

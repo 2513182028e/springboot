@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<meta name="content-type" content="text/html; charset=UTF-8">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <tr align="center">
+        <td >学生编号</td>&nbsp;
+        <td>学生密码</td>&nbsp;
+        <td>学生姓名</td>&nbsp;
+        <td>专业</td>
+        <td>学院</td>
+        <td>年龄</td>
+        <td>性别</td>
+        <td>加密值</td>
+        <td>操作1</td>
+        <td>操作2</td>
+        <td>状态</td>
+    </tr>
+    <tr th:each="emp :${students}"  class="row">
+        <td>
+            <span th:text="${emp.getStudentID()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getPassword()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getName()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getMajor()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getCollege()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getAge()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getSex()}"></span>
+        </td>
+        <td>
+            <span th:text="${emp.getSalt()}"></span>
+        </td>
+        <td>
+            <span>
+                <a th:href="@{/Manager/deleteStudent(StudentID=${emp.getStudentID()})}">删除</a>
+            </span>
+        </td>
+        <td>
+            <span>
+                <a th:href="@{/Manager/updateStudent(StudentID=${emp.getStudentID()})}">修改</a>
+            </span>
+        </td>
+    </tr>
+</table>
+<tr>
+        <span th:align="center">
+            <a th:href="@{/Manager/AddStudent}" style="color: #ff0000" th:align="center">学生注册</a>
+        </span>
+</tr>
+<br>
+<br>
+<br>
+<a href="/Manager/login/Authentication">返回主页面</a>
+</body>
+</html>
