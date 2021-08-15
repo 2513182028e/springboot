@@ -55,11 +55,11 @@ public class ManagerClassesController {
             model.addAttribute("msg","请先登录");
             return "index";
         }
-       List<ViewClass>  v=managerClassesService.queryViewClassAll();
+       List<ViewClass>  v=managerClassesService.queryViewClassAll();         //得到全部的课程（ViewClass）信息
         for (ViewClass viewClass : v) {
             String TeacherID = viewClass.getTeacherID();
             String ClassID = viewClass.getClassID();
-               Object k=redisTemplate.opsForValue().get("ClassNumber::"+TeacherID+ClassID);
+               Object k=redisTemplate.opsForValue().get("ClassNumber::"+TeacherID+ClassID);       //从Redis缓存中查找该课程已参加人数
                if(k!=null)
                {
                    int num=Integer.parseInt(k.toString());
@@ -83,7 +83,7 @@ public class ManagerClassesController {
             model.addAttribute("msg","请先登录");
             return "index";
         }
-        List<Classes> classes=managerClassesService.queryClassesAll();
+        List<Classes> classes=managerClassesService.queryClassesAll();    //获得课程信息（不含TeacherID）
         model.addAttribute("ClassesInformation",classes);
         return "ManagerMainClassesInformation";
     }
@@ -115,14 +115,14 @@ public class ManagerClassesController {
         }
         Classes classess=classesService.queryByID(ClassID);
         if(ClassID.equals("")||ClassName.equals("")||Context.equals("")||ClassDurationPoints.equals("")||
-                ClassFinalPoints.equals("")||ClassPoints.equals("")||NumberMax.equals("")||
+                ClassFinalPoints.equals("")||ClassPoints.equals("")||NumberMax.equals("")||               //判断表单的完整性
                 Place.equals("")||Time.equals(""))
         {
             model.addAttribute("msg","请填写完整的课程信息");
             model.addAttribute("ManagerClass",classess);
             return "ManagerMainClassUpdate";
         }
-        List<Classes> classes1=managerClassesService.queryClassesAll();
+        List<Classes> classes1=managerClassesService.queryClassesAll();           
         for(int i=0;i<classes1.size();i++)
         {
             Classes c=classes1.get(i);
@@ -130,9 +130,9 @@ public class ManagerClassesController {
             {
                 continue;
             }
-            if(ClassesTime.Com(c.getTime(),Time)&&Place.equals(c.getPlace()))
+            if(ClassesTime.Com(c.getTime(),Time)&&Place.equals(c.getPlace()))               //ClassesTime.Com（）用来判断两个课的时间是否冲突，具体实现见工具类
             {
-                model.addAttribute("msg","修改课程与已存在的"+c.getClassID()+"号课程存在时间冲突");
+                model.addAttribute("msg","修改课程与已存在的"+c.getClassID()+"号课程存在时间冲突");        
                 model.addAttribute("ClassesInformation",classes1);
                 return "ManagerMainClassesInformation";
             }
@@ -148,7 +148,8 @@ public class ManagerClassesController {
         classes.setTime(Time);
         classes.setNumberMax(Integer.parseInt(NumberMax));
         Classes d=managerClassesService.updateClass(classes);
-        Boolean f=redisTemplate.hasKey("ViewClass::0");
+        Boolean f=redisTemplate.hasKey("ViewClass::0");                      //更新Class课程时，因此ViewClass类是Class表和Class——teacher表连接而成，故当Class课程改变时，
+        //缓存ViewClass：：0 (代表所以选课信息) 需要失效，避免Redis和Mysql的数据不一致
         if(f!=null)
         {
             redisTemplate.delete("ViewClass::0");
@@ -162,7 +163,7 @@ public class ManagerClassesController {
         if(g!=null)
         {
             redisTemplate.delete(
-                    "Classes::0");
+                    "Classes::0");              //同理（Classes：：0）含有所以课程信息，该缓存也需要失效
         }
 
         return "redirect:/Manager/Classes/ClassInformation";
@@ -176,7 +177,7 @@ public class ManagerClassesController {
             model.addAttribute("msg","请先登录");
             return "ManagerLogin";
         }
-        return "ManagerMainClassAdd";
+        return "ManagerMainClassAdd";       //增加课程时填写课程信息的表单，该表单填写完成后，发送请求到下面的"/AddOver"
     }
 
 
@@ -210,7 +211,7 @@ public class ManagerClassesController {
             Classes c=classes1.get(i);
             if(ClassesTime.Com(c.getTime(),Time)&&Place.equals(c.getPlace()))
             {
-                 model.addAttribute("msg","新增课程与已存在的"+c.getClassID()+"号课程存在时间冲突");
+                 model.addAttribute("msg","新增课程与已存在的"+c.getClassID()+"号课程存在时间冲突");   //判断新增课程与已有课程是否时间冲突
                  model.addAttribute("ClassesInformation",classes1);
                  return "ManagerMainClassesInformation";
             }
@@ -226,12 +227,12 @@ public class ManagerClassesController {
         classes.setNumberMax(Numberd);
         classes.setPlace(Place);
         classes.setTime(Time);
-       Classes d= managerClassesService.AddClasses(classes);
+       Classes d= managerClassesService.AddClasses(classes);     //添加新课程
         Boolean f=redisTemplate.hasKey("ViewClass::0");
         if(f!=null)
         {
             redisTemplate.delete("ViewClass::0");
-            Set<String> keys=redisTemplate.keys("ViesClass::"+"*");
+            Set<String> keys=redisTemplate.keys("ViesClass::"+"*");              //缓存要主动删除，原因上面一样
             if(keys!=null)
             {
                 redisTemplate.delete(keys);
@@ -284,7 +285,7 @@ public class ManagerClassesController {
     }
 
     @RequestMapping("/deleteRelation")
-    public String delete(@RequestParam("TeacherID") String TeacherID,@RequestParam("ClassID") String ClassID,
+    public String delete(@RequestParam("TeacherID") String TeacherID,@RequestParam("ClassID") String ClassID,           //修改任教关系（class——teacher表）
                          Model model,HttpSession httpSession)
     {
         if(httpSession.getAttribute("ManagerID")==null)
@@ -293,12 +294,12 @@ public class ManagerClassesController {
             return "ManagerLogin";
         }
          managerClassesService.deleteRelation(TeacherID,ClassID);
-        Boolean f=redisTemplate.hasKey("ViewClass::0");
+        Boolean f=redisTemplate.hasKey("ViewClass::0");            //ViewClass 由Class表和Class——teacher表连接而成，故任教关系改变，该缓存也要失效
         if(f!=null)
         {
             redisTemplate.delete("ViewClass::0");
         }
-        Object  k=redisTemplate.opsForValue().get("ViewClass::"+TeacherID);
+        Object  k=redisTemplate.opsForValue().get("ViewClass::"+TeacherID);    //被修改老师的任教缓存删除
         if(k!=null)
         {
             redisTemplate.delete("ViewClass::"+TeacherID);
@@ -306,7 +307,7 @@ public class ManagerClassesController {
         Object l=redisTemplate.opsForValue().get("class_student::"+TeacherID);
         if(l!=null)
         {
-            redisTemplate.delete("class_student::"+TeacherID);
+            redisTemplate.delete("class_student::"+TeacherID);            //由于后续学生的选课情况中，涉及TeacherID,ClassID,StudentID,故此缓存也要删除
         }
         Set<String> keys=redisTemplate.keys("ClassNumber::"+"*");
         if(keys!=null)
@@ -365,7 +366,7 @@ public class ManagerClassesController {
        {
            redisTemplate.delete("ViewClass::0");
        }
-       Object  k=redisTemplate.opsForValue().get("ViewClass::"+TeacherID);
+       Object  k=redisTemplate.opsForValue().get("ViewClass::"+TeacherID);              //新增任教关系，删除缓存原因与上面一致
        if(k!=null)
        {
            redisTemplate.delete("ViewClass::"+TeacherID);
@@ -455,7 +456,7 @@ public class ManagerClassesController {
    public String InforClass(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
 
        String ClassID=httpServletRequest.getParameter("ClassID");
-       Classes classes=classesService.queryByID(ClassID);
+       Classes classes=classesService.queryByID(ClassID);                    //Ajax，异步刷新，当输入课程编号时，表单下面的课程名称自动填充 ：课程不存在或课程名
        String jsono="该课程不存在";
        if(classes!=null)
        {
